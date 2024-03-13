@@ -9,12 +9,15 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -43,8 +46,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+
     'drf_yasg',
-    'django_filters'
+    'django_filters',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -84,9 +89,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tmp',
-        'USER': 'postgres',
-        'PASSWORD': 294672
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD')
     }
 }
 
@@ -127,7 +132,66 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
+
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://read-and-write.example.com",
+]
+
+CORS_ALLOW_ALL_ORIGINS = False
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+
+CELERY_TIMEZONE = "Asia/Novosibirsk"
+
+CELERY_TASK_TRACK_STARTED = True
+
+CELERY_BEAT_SCHEDULE = {
+    'check_habit_time': {
+        'task': 'check_habit_time',
+        'schedule': timedelta(minutes=1)
+    },
+}
+
+TELEGRAM_URL = os.getenv('TELEGRAM_URL')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
