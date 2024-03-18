@@ -18,22 +18,22 @@ def send_telegram_message(messages):
 
 
 def check_habits(habit, current_time, today):
-    url = f'{TELEGRAM_URL}{TELEGRAM_TOKEN}/sendMessage'
-    if habit.time.strftime('%H:%M') == current_time.strftime('%H:%M'):
-        print(f'Информация привычки: {habit}')
+    if habit.frequency in ('DAILY', today):
+        if habit.time.strftime('%H:%M') == current_time.strftime('%H:%M'):
+            print(f'Информация привычки: {habit}')
 
-        chat_id = habit.owner.chat_id
-        message = f'Действие: {habit.action}/nМесто: {habit.place}'
+            chat_id = habit.owner.chat_id
+            message = f'Действие: {habit.action}/nМесто: {habit.place}'
 
-        if habit.tribute:
-            message += f'Награда: {habit.tribute}'
-        elif habit.pleasant_link:
-            message += f'Создайте приятную привычку: {habit.pleasant_link}'
-        else:
-            message += 'Награда или приятная привычка не выбраны'
+            if habit.tribute:
+                message += f'Награда: {habit.tribute}'
+            elif habit.pleasant_link:
+                message += f'Создайте приятную привычку: {habit.pleasant_link}'
+            else:
+                message += 'Награда или приятная привычка не выбраны'
 
-        message += f'Продолжительность: {habit.duration}'
-        return chat_id, message
+            message += f'Продолжительность: {habit.duration}'
+            return chat_id, message
     return None
 
 
