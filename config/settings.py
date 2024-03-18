@@ -191,8 +191,8 @@ CELERY_TIMEZONE = "Asia/Novosibirsk"
 CELERY_TASK_TRACK_STARTED = True
 
 CELERY_BEAT_SCHEDULE = {
-    'get_habit_scheduler': {
-        'task': 'habits.get_habit_scheduler',
+    'check_habit_time': {
+        'task': 'habits.tasks.check_habit_time',
         'schedule': timedelta(days=1)
     },
 }
