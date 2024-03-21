@@ -54,6 +54,7 @@
     
     - CORS_ALLOWED_ORIGINS=<>
     
+    - CELERY_TIMEZONE=<ваше_местное_время(Europe/Moscow)>
     - CELERY_BROKER_URL=<url_адрес_брокера_celery(redis://redis:6379)>
     - CELERY_RESULT_BACKEND=<url_бэкенда>
     
