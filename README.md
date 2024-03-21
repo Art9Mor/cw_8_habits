@@ -52,7 +52,7 @@
     
     - EMAIL_HOST_USER=<почта_для_рассылки>
     
-    - CORS_ALLOWED_ORIGINS=<>
+    - CORS_ALLOWED_ORIGINS=<адрес_вашего_фронтенд_сервера>
     
     - CELERY_TIMEZONE=<ваш_часовой_пояс(Europe/Moscow)>
     - CELERY_BROKER_URL=<url_адрес_брокера_celery(redis://redis:6379)>
